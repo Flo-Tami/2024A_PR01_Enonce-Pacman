@@ -7,6 +7,7 @@ from helper import create_board, create_special_coins
 from helper import create_coins
 from end import End
 import threading
+import time
 
 class Game:
     def __init__(self, screen):
@@ -20,6 +21,7 @@ class Game:
         pygame.display.set_caption("Pac-Man")
         self.font = pygame.font.Font(None, 36)
         self.score = 0
+        self.delay = time.time()
         self.wall_color = (0, 0, 255)
 
         # Charger les images des fantômes
@@ -93,7 +95,6 @@ class Game:
             self.screen.blit(pacman_image, (150 + i * 40, 50 * 15))
 
     def handle_keypress(self, event):
-        pass
         # TODO: Vérifiez si la touche pressée est la flèche droite avec event.key == pygame.K_RIGHT
             # TODO: Vérifiez si Pac-Man peut se déplacer à droite sans entrer en collision avec self.check_collision((1, 0))
                 # TODO: Si le déplacement est possible, définissez la nouvelle direction de Pac-Man vers la droite avec self.pacman.set_direction((1, 0))
@@ -109,10 +110,36 @@ class Game:
         # TODO: Vérifiez si la touche pressée est la flèche vers le bas
             # TODO: Vérifiez si Pac-Man peut se déplacer vers le bas sans entrer en collision
                 # TODO: Si le déplacement est possible, définissez la nouvelle direction de Pac-Man vers le bas
+        
+        right = (1, 0)
+        left = (-1, 0)
+        up = (0, -1)
+        down = (0, 1)
+        
+        
+        if (event.key == pygame.K_RIGHT and self.check_collision(right)):
+                self.pacman.set_direction(right)
+        
+        if (event.key == pygame.K_LEFT and self.check_collision(left)):
+                self.pacman.set_direction(left)
+                
+        if (event.key == pygame.K_UP and self.check_collision(up)):
+                self.pacman.set_direction(up)
+        
+        if (event.key == pygame.K_DOWN and self.check_collision(down)):
+                self.pacman.set_direction(down)
                 
 
     def check_collision(self, direction):
-        pass
+        dx = direction[0]
+        dy = direction[1]
+        new_x = self.pacman.x + dx
+        new_y = self.pacman.y + dy
+        
+        
+                
+        return self.board[new_y][new_x] == 0
+        
         # TODO: Extraire les coordonnées de déplacement de la direction (dx, dy)
 
         # TODO: Calculer la nouvelle position de Pac-Man après le déplacement (new_x, new_y) avec la formule new_x = self.pacman.x + dx
@@ -137,9 +164,13 @@ class Game:
 
     def check_score(self):
         # TODO: Vérifier si la position actuelle de Pac-Man (en coordonnées de grille) correspond à une position de pièce en utilisant (self.pacman.x, self.pacman.y)
-            # TODO: Si Pac-Man est sur une pièce, la retirer de la liste des pièces restantes à collecter 
+        # TODO: Si Pac-Man est sur une pièce, la retirer de la liste des pièces restantes à collecter 
 
-            # TODO: Ajouter des points au score du joueur pour la pièce collectée (par exemple, 10 points)
+        # TODO: Ajouter des points au score du joueur pour la pièce collectée (par exemple, 10 points)
+        if (self.pacman.x, self.pacman.y) in self.coins:
+            self.coins.remove((self.pacman.x, self.pacman.y))
+            self.score += 10 
+
 
         if len(self.coins) == 0:
             self.end.render(True)
@@ -147,7 +178,11 @@ class Game:
             self.game_over = True
 
     def check_special_coins(self):
-        pass
+        if (self.pacman.x, self.pacman.y) in self.special_coins:
+            self.special_coins.remove((self.pacman.x, self.pacman.y))
+            self.score += 10
+            self.activate_eat_mode()
+            
         # TODO: Vérifier si la position actuelle de Pac-Man (en coordonnées de grille) correspond à une position de pièce spéciale
 
             # TODO: Si Pac-Man est sur une pièce spéciale, retirer cette pièce spéciale de la liste
@@ -185,26 +220,31 @@ class Game:
         self.pink_ghost_instance.draw()
 
     def check_collision_between_ghosts_and_pacman(self):
-        for ghost in self.ghosts:
-            if ghost.rect.colliderect(self.pacman.rect):
-                if ghost.edible:
-                    ghost.stop()
-                    ghost.die()
-                elif not ghost.dead:
-                    # Game over
-                    if self.pacman.die():
-                        self.red_ghost_instance.stop()
-                        self.blue_ghost_instance.stop()
-                        self.orange_ghost_instance.stop()
-                        self.pink_ghost_instance.stop()
-                        self.game_over = True
-                        self.end.render(False)
-                        return 
-                    self.pacman.reset()
-                    self.red_ghost_instance.reset()
-                    self.blue_ghost_instance.reset()
-                    self.orange_ghost_instance.reset()
-                    self.pink_ghost_instance.reset()
+        
+        if time.time() - self.delay > 1.5:
+            for ghost in self.ghosts:
+                if ghost.rect.colliderect(self.pacman.rect):
+                    print("collision:", ghost)
+                    if ghost.edible:
+                        ghost.stop()
+                        ghost.die()
+                    elif not ghost.dead:
+                        # Game over
+                        if self.pacman.die():
+                            self.red_ghost_instance.stop()
+                            self.blue_ghost_instance.stop()
+                            self.orange_ghost_instance.stop()
+                            self.pink_ghost_instance.stop()
+                            self.game_over = True
+                            self.end.render(False)
+                            return 
+                        self.pacman.reset()
+                        self.red_ghost_instance.reset()
+                        self.blue_ghost_instance.reset()
+                        self.orange_ghost_instance.reset()
+                        self.pink_ghost_instance.reset()
+                        self.delay = time.time()
+                        
 
 if __name__ == "__main__":
     pygame.init()
