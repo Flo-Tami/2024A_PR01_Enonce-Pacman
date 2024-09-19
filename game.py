@@ -224,7 +224,6 @@ class Game:
         if time.time() - self.delay > 1.5:
             for ghost in self.ghosts:
                 if ghost.rect.colliderect(self.pacman.rect):
-                    print("collision:", ghost)
                     if ghost.edible:
                         ghost.stop()
                         ghost.die()

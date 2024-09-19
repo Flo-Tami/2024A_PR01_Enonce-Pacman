@@ -38,6 +38,7 @@ class Ghost:
             else:
                 self.pos[0] = next_x
                 self.pos[1] = next_y
+                self.rect = next_rect
             
             # TODO: Calculer la prochaine position en fonction de la direction et de la vitesse
             # Utilisez `self.direction` pour déterminer la direction et `self.speed` pour le déplacement.
