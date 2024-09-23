@@ -221,13 +221,12 @@ class Game:
 
     def check_collision_between_ghosts_and_pacman(self):
         
-        if time.time() - self.delay > 1.5:
             for ghost in self.ghosts:
                 if ghost.rect.colliderect(self.pacman.rect):
                     if ghost.edible:
                         ghost.stop()
                         ghost.die()
-                    elif not ghost.dead:
+                    elif not ghost.dead and time.time() - self.delay > 1:
                         # Game over
                         if self.pacman.die():
                             self.red_ghost_instance.stop()
