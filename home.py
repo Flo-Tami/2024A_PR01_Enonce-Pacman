@@ -45,6 +45,5 @@ class Home:
         nb_wins_text_rect = nb_wins_text.get_rect(center=(screen_width // 2, screen_height // 2 + 225))
         self.screen.blit(nb_wins_text, nb_wins_text_rect)
 
-
     def is_button_clicked(self, pos):
         return self.button_rect.collidepoint(pos)

@@ -135,8 +135,6 @@ class Game:
         dy = direction[1]
         new_x = self.pacman.x + dx
         new_y = self.pacman.y + dy
-        
-        
                 
         return self.board[new_y][new_x] == 0
         
