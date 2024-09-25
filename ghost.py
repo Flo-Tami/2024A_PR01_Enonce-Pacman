@@ -18,7 +18,6 @@ class Ghost:
         self.dead_img = pygame.transform.scale(pygame.image.load('assets/images/dead.png'), GHOST_SIZE)   # Image du fantôme quand il est mort
 
     def draw(self):
-
         if not self.dead and not self.edible:
             self.screen.blit(self.img, self.pos)
         elif not self.dead and self.edible:
@@ -95,13 +94,13 @@ class Ghost:
         # TODO: Parcourir chaque direction et vérifier si elle est valide (pas de collision avec un mur)
             # TODO: Calculer la prochaine position du fantôme en fonction de la direction
             
-        for index in range(len(mix_direction)):
-            x = mix_direction[index][0] + self.pos[0]
-            y = mix_direction[index][1] + self.pos[1]
+        for direction in mix_direction:
+            x = direction[0] + self.pos[0]
+            y = direction[1] + self.pos[1]
             next_rect = pygame.Rect(x, y, GHOST_SIZE[0], GHOST_SIZE[1])
             
             if not self.check_collision(next_rect):
-                self.direction = mix_direction[index]
+                self.direction = direction
                 return
                 
             #ßCréer un rectangle représentant cette nouvelle position

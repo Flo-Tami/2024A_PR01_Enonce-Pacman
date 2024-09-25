@@ -44,7 +44,6 @@ def create_coins(board):
             if ((board[y])[x] == 0 and (x, y) not in special_coins_pos and
                 (x, y) not in center_pos):
                 coins.append((x, y))
-            
 
     return coins
 

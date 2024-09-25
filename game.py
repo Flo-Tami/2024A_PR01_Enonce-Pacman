@@ -218,7 +218,6 @@ class Game:
         self.pink_ghost_instance.draw()
 
     def check_collision_between_ghosts_and_pacman(self):
-        
             for ghost in self.ghosts:
                 if ghost.rect.colliderect(self.pacman.rect):
                     if ghost.edible:
