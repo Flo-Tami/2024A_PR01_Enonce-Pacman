@@ -35,8 +35,7 @@ class Ghost:
             if self.check_collision(next_rect):
                 self.change_direction()
             else:
-                self.pos[0] = next_x
-                self.pos[1] = next_y
+                self.pos = list((next_x, next_y))
                 self.rect = next_rect
             
             # TODO: Calculer la prochaine position en fonction de la direction et de la vitesse
@@ -82,8 +81,7 @@ class Ghost:
         self.death_timer = 65
 
     def change_direction(self):
-        mix_direction = [
-            Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
+        mix_direction = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN,]
         
         random.shuffle(mix_direction)
         
@@ -97,6 +95,7 @@ class Ghost:
         for direction in mix_direction:
             x = direction[0] + self.pos[0]
             y = direction[1] + self.pos[1]
+
             next_rect = pygame.Rect(x, y, GHOST_SIZE[0], GHOST_SIZE[1])
             
             if not self.check_collision(next_rect):
